@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoanSmart – Loan Calculator</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: white;
+      }
+  
+        /* Updated Header */
+        .header {
+          background: rgba(10, 10, 10, 0.9);
+          color: white;
+          padding: 1rem;
+          text-align: center;
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: 100;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+          height: 70px;
+        }
+    
+        .header h1 {
+          margin: 0;
+          font-size: 1.8rem;
+          font-weight: bold;
+          flex: 1;
+          text-align: center;
+          color: #0056b3;
+        }
+    
+        .header .logout-button {
+          background-color: rgba(255, 255, 255, 0.2);
+          color: white;
+          border: none;
+          padding: 10px 15px; /* Adjusted padding to reduce width */
+          border-radius: 25px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: background-color 0.3s, transform 0.3s;
+          margin-right: 20px;
+          width: auto; /* Ensure the button width adjusts to content */
+        }
+    
+        .header .logout-button:hover {
+          background-color: rgba(255, 255, 255, 0.3);
+          transform: translateY(-2px);
+        }
+      .container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        margin-top: 80px;
+      }
+      label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+        text-align: left;
+      }
+      input, select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      .result {
+        margin-top: 20px;
+        font-size: 18px;
+        color: #333;
+        text-align: left;
+      }
+      .bank-suggestion {
+        margin-top: 20px;
+        font-size: 16px;
+        color: #555;
+        text-align: left;
+      }
+      .tips {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #666;
+        text-align: left;
+      }
+      .hidden {
+        display: none;
+      }
+      .popup {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        text-align: left;
+        max-width: 800px;
+        width: 90%;
+        border: 2px solid rgba(0, 163, 255, 0.2);
+      }
+      #popupResult {
+        margin: 2rem 0;
+        line-height: 1.8;
+        color: #000000;
+        font-size: 1.2rem;
+      }
+      .popup-buttons {
+        display: flex;
+        gap: 2rem;
+        margin-top: 2rem;
+        justify-content: center;
+      }
+      .popup-buttons button {
+        flex: 1;
+        max-width: 250px;
+        padding: 1.2rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .popup-buttons button:first-child {
+        background: linear-gradient(135deg, #00A3FF, #0057FF);
+        color: white;
+        border: none;
+      }
+      .popup-buttons button:last-child {
+        background: white;
+        color: #00A3FF;
+        border: 2px solid #00A3FF;
+      }
+      .popup-buttons button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 163, 255, 0.2);
+      }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+        backdrop-filter: blur(5px);
+      }
+      .error-message {
+        color: #FF0000;
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+        display: none;
+        font-weight: 500;
+        background-color: rgba(255, 0, 0, 0.1);
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #FF0000;
+        box-shadow: 0 2px 4px rgba(255, 0, 0, 0.1);
+      }
+
+      .input-error {
+        border-color: #FF0000 !important;
+        background-color: rgba(255, 0, 0, 0.05) !important;
+      }
+
+      .input-error + .error-message {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .error-message:hover {
+        background-color: rgba(255, 0, 0, 0.15);
+      }
+
+      /* Scrolling section styles */
+      .scrolling-section {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(10, 10, 10, 0.9);
+        backdrop-filter: blur(10px);
+        z-index: 99;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .scroll-container {
+        overflow: hidden;
+        padding: 0.5rem 0;
+        position: relative;
+        width: 100%;
+      }
+
+      .scroll-content {
+        display: flex;
+        animation: scroll 40s linear infinite;
+        white-space: nowrap;
+        gap: 2rem;
+        padding: 0 1rem;
+      }
+
+      .scroll-item {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.7rem 2.5rem;
+        margin: 0 0.5rem;
+        color: white;
+        font-weight: 500;
+        background: linear-gradient(135deg, rgba(0, 163, 255, 0.1), rgba(0, 87, 255, 0.1));
+        border: 1px solid rgba(0, 163, 255, 0.2);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        min-width: max-content;
+      }
+
+      .scroll-item:hover {
+        background: linear-gradient(135deg, rgba(0, 163, 255, 0.2), rgba(0, 87, 255, 0.2));
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 163, 255, 0.2);
+      }
+
+      .loan-icon {
+        font-size: 1.2rem;
+        margin-right: 0.8rem;
+      }
+
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(calc(-50% - 1rem));
+        }
+      }
+
+      /* Update calculator container styles */
+      .calculator-container {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 3rem;
+        max-width: 600px;
+        width: 90%;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        margin-top: 2rem; /* Added small top margin */
+      }
+
+      .calculator-title {
+        text-align: center;
+        color: #00A3FF;
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      label {
+        color: white;
+        margin-bottom: 0.8rem;
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border: 2px solid rgba(0, 163, 255, 0.3);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.9);
+        color: #000000;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+      }
+
+      input::placeholder {
+        color: rgba(0, 0, 0, 0.5);
+      }
+
+      input:focus, select:focus {
+        outline: none;
+        border-color: #00A3FF;
+        box-shadow: 0 0 20px rgba(0, 163, 255, 0.2);
+        background: white;
+      }
+
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300A3FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.2em;
+        padding-right: 3rem;
+      }
+
+      select option {
+        background: white;
+        color: black;
+        padding: 1rem;
+      }
+
+      .calculate-btn {
+        background: linear-gradient(135deg, #00A3FF, #0057FF);
+        color: white;
+        border: none;
+        padding: 1.2rem 3rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: block;
+        margin: 2rem auto 0;
+        width: fit-content;
+        min-width: 200px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .calculate-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 163, 255, 0.3);
+      }
+
+      .calculate-btn:active {
+        transform: translateY(1px);
+      }
+
+      /* Update result section styling */
+      .result {
+        background: rgba(14, 11, 11, 0.95); /* More opaque white background */
+        padding: 2rem;
+        border-radius: 15px;
+        margin-top: 2rem;
+        border: 2px solid rgba(0, 163, 255, 0.2);
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .result h3 {
+        color: #00A3FF;
+        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
+        font-weight: 600;
+      }
+
+      .result p {
+        color: #000000; /* Black text color */
+        font-size: 1.1rem;
+        margin: 1rem 0;
+        font-weight: 500;
+        line-height: 1.5;
+      }
+
+      .result span {
+        color: #00A3FF; /* Blue color for important numbers */
+        font-weight: 600;
+      }
+
+      /* Add highlight for EMI amount */
+      .emi-amount {
+        font-size: 1.3rem;
+        color: #000000;
+        background: rgba(0, 163, 255, 0.1);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        display: inline-block;
+        margin: 0.5rem 0;
+        font-weight: bold;
+      }
+
+      /* Welcome text styling */
+      .welcome-text {
+        text-align: center;
+        color: #00A3FF;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .calculator-container {
+          position: relative;
+          transform: none;
+          left: auto;
+          top: auto;
+          margin: 120px auto 2rem;
+          padding: 2rem;
+        }
+
+        .welcome-text {
+          font-size: 2rem;
+          margin-top: 1.5rem;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .calculator-title {
+          font-size: 1.5rem;
+        }
+
+        input, select {
+          font-size: 1rem;
+          padding: 0.9rem 1.2rem;
+        }
+
+        .calculate-btn {
+          padding: 1rem 2rem;
+          font-size: 1rem;
+          min-width: 180px;
+        }
+
+        .result {
+          padding: 1.5rem;
+        }
+
+        .result h3 {
+          font-size: 1.2rem;
+        }
+
+        .result p {
+          font-size: 1rem;
+        }
+
+        .emi-amount {
+          font-size: 1.1rem;
+        }
+
+        .popup {
+          padding: 2rem;
+          max-width: 90%;
+        }
+
+        #popupResult {
+          font-size: 1.1rem;
+          line-height: 1.6;
+        }
+
+        .popup-buttons {
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .popup-buttons button {
+          max-width: 100%;
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .calculator-container {
+          padding: 1.5rem;
+        }
+
+        .welcome-text {
+          font-size: 1.8rem;
+        }
+
+        .calculator-title {
+          font-size: 1.5rem;
+        }
+
+        label {
+          font-size: 1rem;
+        }
+
+        input, select {
+          font-size: 0.9rem;
+          padding: 0.8rem 1rem;
+        }
+
+        .popup {
+          padding: 1.5rem;
+        }
+
+        #popupResult {
+          font-size: 1rem;
+        }
+      }
+
+      .dashboard-header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .logo-img {
+        height: 40px;
+        width: auto;
+      }
+
+      .logo-section h1 {
+        color: #00A3FF;
+        font-size: 1.5rem;
+        margin: 0;
+      }
+
+      .user-section {
+        position: relative;
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .user-profile:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      #userName {
+        color: white;
+        font-weight: 500;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 0.5rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        padding: 0.5rem;
+        min-width: 200px;
+        display: none;
+        animation: slideDown 0.3s ease;
+      }
+
+      .dropdown-menu.active {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 0.8rem 1rem;
+        color: #333;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .dropdown-item:hover {
+        background: rgba(0, 163, 255, 0.1);
+        color: #00A3FF;
+      }
+
+      .dropdown-divider {
+        height: 1px;
+        background: rgba(0, 0, 0, 0.1);
+        margin: 0.5rem 0;
+      }
+
+      .logout {
+        color: #FF6B6B;
+      }
+
+      .logout:hover {
+        background: rgba(255, 107, 107, 0.1);
+        color: #FF6B6B;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Adjust main content to account for fixed header */
+      .calculator-container {
+        margin-top: 80px;
+      }
+
+      @media (max-width: 768px) {
+        .dashboard-header {
+          padding: 1rem;
+        }
+
+        .logo-section h1 {
+          font-size: 1.2rem;
+        }
+
+        #userName {
+          display: none;
+        }
+      }
+  </style>
+</head>
+<body>
+  <div class="dashboard-header">
+    <div class="logo-section">
+        <img src="img/logo.jpg" alt="LoanSmart Logo" class="logo-img">
+        <h1>LoanSmart</h1>
+    </div>
+    
+    <div class="user-section">
+        <div class="user-profile" onclick="toggleDropdown()">
+            <img id="userAvatar" src="img/default-avatar.png" alt="User Avatar" class="avatar">
+            <span id="userName">User</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="dropdown-menu" id="userDropdown">
+            <div class="dropdown-item" onclick="showProfile()">
+                <i class="fas fa-user"></i> Profile
+            </div>
+            <div class="dropdown-item" onclick="showHistory()">
+                <i class="fas fa-history"></i> Loan History
+            </div>
+            <div class="dropdown-divider"></div>
+            <div class="dropdown-item logout" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="scrolling-section">
+    <div class="scroll-container loans-scroll">
+      <div class="scroll-content">
+        <div class="scroll-item">
+          <span class="loan-icon">🏠</span> Home Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">🚗</span> Car Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">📚</span> Education Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">💼</span> Business Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">💳</span> Personal Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">🏢</span> Property Loan
+        </div>
+        <!-- Duplicate for continuous scroll -->
+        <div class="scroll-item">
+          <span class="loan-icon">🏠</span> Home Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">🚗</span> Car Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">📚</span> Education Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">💼</span> Business Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">💳</span> Personal Loan
+        </div>
+        <div class="scroll-item">
+          <span class="loan-icon">🏢</span> Property Loan
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="calculator-container">
+      <h2 class="calculator-title">Loan Calculator</h2>
+      <form id="loanForm">
+        <!-- Bank Dropdown -->
+        <label for="bank">Select Bank</label>
+        <select id="bank" required>
+          <option value="">-- Select Bank --</option>
+          <option value="hdfc">HDFC Bank</option>
+          <option value="sbi">State Bank of India</option>
+          <option value="icici">ICICI Bank</option>
+          <option value="idfc">IDFC FIRST Bank</option>
+          <option value="axis">Axis Bank</option>
+          <option value="kotak">Kotak Mahindra Bank</option>
+        </select>
+
+        <!-- Loan Type Dropdown -->
+        <label for="loanType">Loan Type</label>
+        <select id="loanType" required disabled>
+          <option value="">-- Select Loan Type --</option>
+        </select>
+
+        <!-- Profession Dropdown -->
+        <label for="profession">Profession:</label>
+        <select id="profession" onchange="toggleSalarySection()">
+            <option value="">-- Select Profession --</option>
+            <option value="student">Student</option>
+            <option value="employer">Employer</option>
+        </select>
+
+        <!-- Monthly Salary (Conditional Field) -->
+        <div id="salarySection" class="hidden">
+            <label for="salary">Monthly Salary (₹)</label>
+            <input type="number" id="salary" placeholder="Enter monthly salary">
+            <div id="salaryError" class="error-message"></div>
+        </div>
+
+        <!-- Loan Amount -->
+        <label for="loanAmount">Loan Amount (₹)</label>
+        <input type="number" id="loanAmount" placeholder="Enter loan amount" required>
+        <div id="loanAmountError" class="error-message"></div>
+
+        <!-- Loan Tenure (Years) -->
+        <label for="loanTenure">Loan Tenure (Years)</label>
+        <input type="number" id="loanTenure" placeholder="Enter loan tenure in years" required>
+        <div id="loanTenureError" class="error-message"></div>
+
+        <!-- Credit Score (Optional) -->
+        <label for="creditScore">Credit Score (Optional)</label>
+        <input type="number" id="creditScore" placeholder="Enter credit score (if any)">
+        <div id="creditScoreError" class="error-message"></div>
+
+        <!-- Submit Button -->
+        <button type="submit">Calculate Loan</button>
+      </form>
+
+      <!-- Result and Suggestions -->
+      <div class="result" id="result"></div>
+      <div class="bank-suggestion" id="bankSuggestion"></div>
+      <div class="tips" id="tips"></div>
+    </div>
+  </div>
+
+  <!-- Popup for Eligibility -->
+  <div id="popup" class="popup hidden">
+    <div id="popupMessage"></div>
+    <div id="popupResult"></div>
+    <div class="popup-buttons">
+      <button onclick="checkAnother()">Check Another</button>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+  <div id="overlay" class="overlay hidden"></div>
+
+  <script>
+    // Check if user is logged in
+    document.addEventListener('DOMContentLoaded', function() {
+        const googleUser = JSON.parse(localStorage.getItem('googleUser'));
+        const registeredEmail = localStorage.getItem('registeredEmail');
+        
+        if (!googleUser && !registeredEmail) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Update user information
+        if (googleUser) {
+            document.getElementById('userName').textContent = googleUser.name;
+            if (googleUser.picture) {
+                document.getElementById('userAvatar').src = googleUser.picture;
+            }
+        } else {
+            document.getElementById('userName').textContent = registeredEmail.split('@')[0];
+        }
+    });
+
+    function toggleDropdown() {
+        document.getElementById('userDropdown').classList.toggle('active');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('userDropdown');
+        const userProfile = document.querySelector('.user-profile');
+        if (!userProfile.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+
+    function showProfile() {
+        // Store current calculator values
+        localStorage.setItem('calculatorState', JSON.stringify({
+            bank: document.getElementById('bank').value,
+            loanType: document.getElementById('loanType').value,
+            salary: document.getElementById('salary').value,
+            loanAmount: document.getElementById('loanAmount').value,
+            loanTenure: document.getElementById('loanTenure').value,
+            creditScore: document.getElementById('creditScore').value
+        }));
+        
+        // Redirect to profile page
+        window.location.href = 'profile.html';
+    }
+
+    function showHistory() {
+        // Store current calculator values
+        localStorage.setItem('calculatorState', JSON.stringify({
+            bank: document.getElementById('bank').value,
+            loanType: document.getElementById('loanType').value,
+            salary: document.getElementById('salary').value,
+            loanAmount: document.getElementById('loanAmount').value,
+            loanTenure: document.getElementById('loanTenure').value,
+            creditScore: document.getElementById('creditScore').value
+        }));
+        
+        // Redirect to history page
+        window.location.href = 'history.html';
+    }
+
+    function handleLogout() {
+        // Clear all stored data
+        localStorage.removeItem('googleUser');
+        localStorage.removeItem('registeredEmail');
+        localStorage.removeItem('registeredPassword');
+        localStorage.removeItem('calculatorState');
+        
+        // Redirect to login page
+        window.location.href = 'index.html';
+    }
+
+    // Logout function
+    function logout() {
+      window.location.href = 'index.html';
+    }
+
+    // Popup functions
+    function showPopup(message) {
+      document.getElementById('popupMessage').textContent = message;
+      document.getElementById('popup').classList.remove('hidden');
+      document.getElementById('overlay').classList.remove('hidden');
+    }
+
+    function closePopup() {
+      document.getElementById('popup').classList.add('hidden');
+      document.getElementById('overlay').classList.add('hidden');
+    }
+
+    const bankDropdown = document.getElementById('bank');
+    const loanTypeDropdown = document.getElementById('loanType');
+    const salarySection = document.getElementById('salarySection');
+    const resultDiv = document.getElementById('result');
+    const bankSuggestionDiv = document.getElementById('bankSuggestion');
+    const tipsDiv = document.getElementById('tips');
+
+    // Loan types that require monthly salary
+    const loansRequiringSalary = ['home', 'personal', 'car', 'education', 'property', 'business'];
+
+    // Bank and loan data (interest rates and eligibility criteria)
+    const banks = {
+      hdfc: {
+        name: "HDFC Bank",
+        loans: {
+          home: { interestRate: 8.5, minSalary: 30000, minLoanAmount: 100000 },
+          personal: { interestRate: 10.5, minSalary: 25000, minLoanAmount: 50000 },
+          car: { interestRate: 8.75, minSalary: 20000, minLoanAmount: 100000 },
+          education: { interestRate: 9.25, minSalary: 15000, minLoanAmount: 50000 },
+          property: { interestRate: 9.5, minSalary: 30000, minLoanAmount: 100000 },
+          gold: { interestRate: 9.5, minLoanAmount: 25000 },
+          business: { interestRate: 14.0, minSalary: 50000, minLoanAmount: 100000 }
+        }
+      },
+      sbi: {
+        name: "State Bank of India",
+        loans: {
+          home: { interestRate: 8.4, minSalary: 30000, minLoanAmount: 100000 },
+          personal: { interestRate: 9.6, minSalary: 25000, minLoanAmount: 25000 },
+          car: { interestRate: 8.7, minSalary: 20000, minLoanAmount: 100000 },
+          education: { interestRate: 9.25, minSalary: 15000, minLoanAmount: 50000 },
+          property: { interestRate: 9.5, minSalary: 30000, minLoanAmount: 100000 },
+          gold: { interestRate: 9.5, minLoanAmount: 20000 },
+          business: { interestRate: 14.0, minSalary: 50000, minLoanAmount: 100000 }
+        }
+      },
+      icici: {
+        name: "ICICI Bank",
+        loans: {
+          home: { interestRate: 8.4, minSalary: 30000, minLoanAmount: 100000 },
+          personal: { interestRate: 10.5, minSalary: 25000, minLoanAmount: 50000 },
+          car: { interestRate: 8.75, minSalary: 20000, minLoanAmount: 100000 },
+          education: { interestRate: 9.5, minSalary: 15000, minLoanAmount: 50000 },
+          property: { interestRate: 9.25, minSalary: 30000, minLoanAmount: 100000 },
+          gold: { interestRate: 9.5, minLoanAmount: 25000 },
+          business: { interestRate: 15.0, minSalary: 50000, minLoanAmount: 100000 }
+        }
+      },
+      idfc: {
+        name: "IDFC FIRST Bank",
+        loans: {
+          home: { interestRate: 8.5, minSalary: 30000, minLoanAmount: 100000 },
+          personal: { interestRate: 10.49, minSalary: 25000, minLoanAmount: 50000 },
+          car: { interestRate: 8.75, minSalary: 20000, minLoanAmount: 100000 },
+          education: { interestRate: 9.25, minSalary: 15000, minLoanAmount: 50000 },
+          property: { interestRate: 9.5, minSalary: 30000, minLoanAmount: 100000 },
+          gold: { interestRate: 9.5, minLoanAmount: 25000 },
+          business: { interestRate: 14.0, minSalary: 50000, minLoanAmount: 100000 }
+        }
+      },
+      axis: {
+        name: "Axis Bank",
+        loans: {
+          home: { interestRate: 8.4, minSalary: 30000, minLoanAmount: 100000 },
+          personal: { interestRate: 10.49, minSalary: 25000, minLoanAmount: 50000 },
+          car: { interestRate: 8.75, minSalary: 20000, minLoanAmount: 100000 },
+          education: { interestRate: 9.25, minSalary: 15000, minLoanAmount: 50000 },
+          property: { interestRate: 9.5, minSalary: 30000, minLoanAmount: 100000 },
+          gold: { interestRate: 9.5, minLoanAmount: 25000 },
+          business: { interestRate: 14.0, minSalary: 50000, minLoanAmount: 100000 }
+        }
+      },
+      kotak: {
+        name: "Kotak Mahindra Bank",
+        loans: {
+          home: { interestRate: 8.5, minSalary: 30000, minLoanAmount: 100000 },
+          personal: { interestRate: 10.99, minSalary: 25000, minLoanAmount: 50000 },
+          car: { interestRate: 8.75, minSalary: 20000, minLoanAmount: 100000 },
+          education: { interestRate: 9.25, minSalary: 15000, minLoanAmount: 50000 },
+          property: { interestRate: 9.5, minSalary: 30000, minLoanAmount: 100000 },
+          gold: { interestRate: 9.5, minLoanAmount: 25000 },
+          business: { interestRate: 14.0, minSalary: 50000, minLoanAmount: 100000 }
+        }
+      }
+    };
+
+    // Update loan types based on selected bank
+    bankDropdown.addEventListener('change', function () {
+      const selectedBank = bankDropdown.value;
+      if (selectedBank) {
+        loanTypeDropdown.disabled = false;
+        loanTypeDropdown.innerHTML = '<option value="">-- Select Loan Type --</option>';
+        Object.keys(banks[selectedBank].loans).forEach(loan => {
+          loanTypeDropdown.innerHTML += `<option value="${loan}">${loan.charAt(0).toUpperCase() + loan.slice(1)} Loan</option>`;
+        });
+      } else {
+        loanTypeDropdown.disabled = true;
+        loanTypeDropdown.innerHTML = '<option value="">-- Select Loan Type --</option>';
+      }
+      salarySection.classList.add('hidden'); // Hide salary section initially
+    });
+
+    // Show/hide salary based on loan type
+    loanTypeDropdown.addEventListener('change', function () {
+      const selectedLoanType = loanTypeDropdown.value;
+      if (loansRequiringSalary.includes(selectedLoanType)) {
+        salarySection.classList.remove('hidden');
+        resultDiv.innerHTML = ""; // Clear any previous prompts
+      } else {
+        salarySection.classList.add('hidden');
+        resultDiv.innerHTML = `<strong>Note:</strong> For ${selectedLoanType.charAt(0).toUpperCase() + selectedLoanType.slice(1)} Loans, monthly salary is not required.`;
+      }
+    });
+
+    // Function to validate salary
+    function validateSalary(salary, selectedBank, selectedLoanType) {
+      const loanDetails = banks[selectedBank].loans[selectedLoanType];
+      const minSalary = loanDetails.minSalary;
+
+      // Clear previous error messages
+      document.getElementById('salaryError').textContent = '';
+
+      // Validate salary
+      if (salary < minSalary) {
+        document.getElementById('salaryError').textContent = `Minimum salary required for this bank is ₹${minSalary}`;
+        return false;
+      }
+
+      return true;
+    }
+
+    // Function to validate loan amount
+    function validateLoanAmount(loanAmount, selectedBank, selectedLoanType) {
+      const loanAmountError = document.getElementById('loanAmountError');
+      const minLoanAmount = banks[selectedBank].loans[selectedLoanType].minLoanAmount;
+
+      if (loanAmount <= 0) {
+        loanAmountError.textContent = "Loan Amount cannot be 0 or less. Please enter a valid amount.";
+        return false;
+      } else if (loanAmount < minLoanAmount) {
+        loanAmountError.textContent = `Minimum loan amount for this loan type is ₹${minLoanAmount}.`;
+        return false;
+      } else {
+        loanAmountError.textContent = "";
+        return true;
+      }
+    }
+
+    // Function to validate loan tenure
+    function validateLoanTenure(loanTenure) {
+      const loanTenureError = document.getElementById('loanTenureError');
+      if (loanTenure <= 0) {
+        loanTenureError.textContent = "Loan Tenure cannot be 0 or less. Please enter a valid tenure.";
+        return false;
+      } else {
+        loanTenureError.textContent = "";
+        return true;
+      }
+    }
+
+    // Function to validate credit score
+    function validateCreditScore(creditScore) {
+      const creditScoreError = document.getElementById('creditScoreError');
+      if (creditScore && (creditScore < 300 || creditScore > 900)) {
+        creditScoreError.textContent = "Credit Score must be between 300 and 900. Please enter a valid score.";
+        return false;
+      } else {
+        creditScoreError.textContent = "";
+        return true;
+      }
+    }
+
+    // Form submission
+    const loanForm = document.getElementById('loanForm');
+    loanForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Get user inputs
+      const selectedBank = bankDropdown.value;
+      const selectedLoanType = loanTypeDropdown.value;
+      const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+      const loanTenure = parseFloat(document.getElementById('loanTenure').value);
+      const creditScore = parseFloat(document.getElementById('creditScore').value) || 0;
+      const salary = parseFloat(document.getElementById('salary').value) || 0;
+
+      // Validate all fields and collect errors
+      let isValid = true;
+
+      // Validate Loan Amount
+      const isLoanAmountValid = validateLoanAmount(loanAmount, selectedBank, selectedLoanType);
+      if (!isLoanAmountValid) isValid = false;
+
+      // Validate Loan Tenure
+      const isLoanTenureValid = validateLoanTenure(loanTenure);
+      if (!isLoanTenureValid) isValid = false;
+
+      // Validate Credit Score
+      const isCreditScoreValid = validateCreditScore(creditScore);
+      if (!isCreditScoreValid) isValid = false;
+
+      // Validate Salary (if required)
+      if (loansRequiringSalary.includes(selectedLoanType)) {
+        const isSalaryValid = validateSalary(salary, selectedBank, selectedLoanType);
+        if (!isSalaryValid) isValid = false;
+      }
+
+      // If any validation fails, stop further processing
+      if (!isValid) {
+        return;
+      }
+
+      // Calculate loan details
+      const bankDetails = banks[selectedBank];
+      const loanDetails = bankDetails.loans[selectedLoanType];
+      const interestRate = loanDetails.interestRate;
+      const monthlyInterestRate = interestRate / 12 / 100;
+      const numberOfPayments = loanTenure * 12;
+      const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) /
+                  (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+      const totalRepayment = emi * numberOfPayments;
+      const totalInterest = totalRepayment - loanAmount;
+      const totalAmount = totalRepayment;
+
+      // Prepare result HTML
+      const resultHTML = `
+        <strong>Selected Bank:</strong> ${banks[selectedBank].name}<br>
+        <strong>Loan Type:</strong> ${selectedLoanType.charAt(0).toUpperCase() + selectedLoanType.slice(1)} Loan<br>
+        <strong>Loan Amount:</strong> ₹${loanAmount.toFixed(2)}<br>
+        <strong>Interest Rate:</strong> ${interestRate}%<br>
+        <strong>Loan Tenure:</strong> ${loanTenure} years<br>
+        <strong>Monthly EMI:</strong> ₹${emi.toFixed(2)}<br>
+        <strong>Total Repayment:</strong> ₹${totalRepayment.toFixed(2)}<br>
+      `;
+
+      // Add credit score tips
+      let tipsHTML = '';
+      if (creditScore > 0 && creditScore < 600) {
+        tipsHTML = `
+          <br><strong>Tips to Improve Credit Score:</strong><br>
+          1. Pay your bills on time.<br>
+          2. Reduce your credit card balances.<br>
+          3. Avoid applying for new credit frequently.<br>
+        `;
+      } else if (creditScore === 0) {
+        tipsHTML = `
+          <br><strong>No Credit Score Provided:</strong><br>
+          You can still apply for loans, but having a credit score may improve your eligibility and interest rates.<br>
+          Consider building your credit history by using a secured credit card or small loans.
+        `;
+      } else {
+        tipsHTML = "<br>Your credit score is good! Keep it up.";
+      }
+
+      // Display result in popup
+      document.getElementById('popupResult').innerHTML = resultHTML + tipsHTML;
+      document.getElementById('popup').classList.remove('hidden');
+      document.getElementById('overlay').classList.remove('hidden');
+
+      // Save loan to history
+      const loanDetailsToSave = {
+        bank: bankDetails.name,
+        loanType: selectedLoanType,
+        loanAmount: loanAmount,
+        loanTenure: loanTenure,
+        interestRate: interestRate,
+        emi: emi,
+        totalInterest: totalInterest,
+        totalAmount: totalAmount,
+        date: new Date().toISOString()
+      };
+      saveLoanToHistory(loanDetailsToSave);
+    });
+
+    // Function to check another loan
+    function checkAnother() {
+      // Reset form
+      document.getElementById('loanForm').reset();
+      // Reset loan type dropdown
+      loanTypeDropdown.disabled = true;
+      loanTypeDropdown.innerHTML = '<option value="">-- Select Loan Type --</option>';
+      // Hide salary section
+      salarySection.classList.add('hidden');
+      // Clear error messages
+      document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+      // Clear results
+      resultDiv.innerHTML = '';
+      bankSuggestionDiv.innerHTML = '';
+      tipsDiv.innerHTML = '';
+      // Close popup
+      closePopup();
+    }
+
+    // Function to check if elements are in viewport
+    function isInViewport(element) {
+      const rect = element.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    }
+
+    // Pause animations when section is not in viewport
+    window.addEventListener('scroll', () => {
+      const scrollSection = document.querySelector('.scrolling-section');
+      if (isInViewport(scrollSection)) {
+        document.querySelectorAll('.scroll-content').forEach(content => {
+          content.style.animationPlayState = 'running';
+        });
+      } else {
+        document.querySelectorAll('.scroll-content').forEach(content => {
+          content.style.animationPlayState = 'paused';
+        });
+      }
+    });
+
+    // Add this to your existing JavaScript
+    function validateAndCalculate(event) {
+      event.preventDefault();
+
+      // Get form values and elements
+      const salaryInput = document.getElementById('salary');
+      const loanAmountInput = document.getElementById('loanAmount');
+      const loanTenureInput = document.getElementById('loanTenure');
+      const creditScoreInput = document.getElementById('creditScore');
+
+      const selectedBank = document.getElementById('bank').value;
+      const selectedLoanType = document.getElementById('loanType').value;
+      const salary = parseFloat(salaryInput.value) || 0;
+      const loanAmount = parseFloat(loanAmountInput.value) || 0;
+      const loanTenure = parseFloat(loanTenureInput.value) || 0;
+      const creditScore = parseFloat(creditScoreInput.value) || 0;
+
+      // Get bank loan details
+      const bankDetails = banks[selectedBank];
+      const loanDetails = bankDetails.loans[selectedLoanType];
+
+      // Reset previous error states
+      const inputs = [salaryInput, loanAmountInput, loanTenureInput, creditScoreInput];
+      inputs.forEach(input => {
+          input.classList.remove('input-error');
+          const errorDiv = document.getElementById(`${input.id}Error`);
+          if (errorDiv) errorDiv.style.display = 'none';
+      });
+
+      let hasError = false;
+
+      // Salary validation
+      if (salary <= 0) {
+          salaryInput.classList.add('input-error');
+          document.getElementById('salaryError').textContent = 
+              `Please enter a salary amount between ₹1 and ₹${loanDetails.minSalary.toLocaleString()}`;
+          document.getElementById('salaryError').style.display = 'block';
+          hasError = true;
+      } else if (salary < loanDetails.minSalary) {
+          salaryInput.classList.add('input-error');
+          document.getElementById('salaryError').textContent = 
+              `Minimum salary requirement is ₹${loanDetails.minSalary.toLocaleString()}`;
+          document.getElementById('salaryError').style.display = 'block';
+          hasError = true;
+      }
+
+      // Loan amount validation
+      if (loanAmount <= 0) {
+          loanAmountInput.classList.add('input-error');
+          document.getElementById('loanAmountError').textContent = 
+              `Please enter a loan amount between ₹1 and ₹${(loanDetails.minLoanAmount * 100).toLocaleString()}`;
+          document.getElementById('loanAmountError').style.display = 'block';
+          hasError = true;
+      } else if (loanAmount < loanDetails.minLoanAmount) {
+          loanAmountInput.classList.add('input-error');
+          document.getElementById('loanAmountError').textContent = 
+              `Minimum loan amount is ₹${loanDetails.minLoanAmount.toLocaleString()}`;
+          document.getElementById('loanAmountError').style.display = 'block';
+          hasError = true;
+      }
+
+      // Loan tenure validation
+      if (loanTenure <= 0) {
+          loanTenureInput.classList.add('input-error');
+          document.getElementById('loanTenureError').textContent = 
+              'Please enter a loan tenure between 1 and 30 years';
+          document.getElementById('loanTenureError').style.display = 'block';
+          hasError = true;
+      } else if (loanTenure > 30) {
+          loanTenureInput.classList.add('input-error');
+          document.getElementById('loanTenureError').textContent = 
+              'Maximum loan tenure is 30 years';
+          document.getElementById('loanTenureError').style.display = 'block';
+          hasError = true;
+      }
+
+      // Credit score validation
+      if (creditScore !== 0) {
+          if (creditScore < 300 || creditScore > 900) {
+              creditScoreInput.classList.add('input-error');
+              document.getElementById('creditScoreError').textContent = 
+                  'Credit score must be between 300 and 900';
+              document.getElementById('creditScoreError').style.display = 'block';
+              hasError = true;
+          }
+      }
+
+      if (hasError) {
+          return false;
+      }
+
+      // Rest of your existing calculation code...
+      const interestRate = loanDetails.interestRate;
+      const monthlyInterestRate = interestRate / 12 / 100;
+      const numberOfPayments = loanTenure * 12;
+      const emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, numberOfPayments)) /
+                 (Math.pow(1 + monthlyInterestRate, numberOfPayments) - 1);
+      const totalAmount = emi * numberOfPayments;
+      const totalInterest = totalAmount - loanAmount;
+
+      // Display result
+      document.getElementById('result').innerHTML = `
+          <h3>Loan Calculation Results</h3>
+          <p>Bank: <span>${bankDetails.name}</span></p>
+          <p>Loan Type: <span>${selectedLoanType.charAt(0).toUpperCase() + selectedLoanType.slice(1)} Loan</span></p>
+          <p>Principal Amount: <span>₹${loanAmount.toLocaleString()}</span></p>
+          <p>Interest Rate: <span>${interestRate}%</span></p>
+          <p>Loan Tenure: <span>${loanTenure} years</span></p>
+          <div class="emi-amount">Monthly EMI: ₹${emi.toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+          <p>Total Interest: <span>₹${totalInterest.toLocaleString(undefined, {maximumFractionDigits: 2})}</span></p>
+          <p>Total Amount Payable: <span>₹${totalAmount.toLocaleString(undefined, {maximumFractionDigits: 2})}</span></p>
+      `;
+
+      // Save loan to history
+      const loanDetailsToSave = {
+        bank: bankDetails.name,
+        loanType: selectedLoanType,
+        loanAmount: loanAmount,
+        loanTenure: loanTenure,
+        interestRate: interestRate,
+        emi: emi,
+        totalInterest: totalInterest,
+        totalAmount: totalAmount,
+        date: new Date().toISOString()
+      };
+      saveLoanToHistory(loanDetailsToSave);
+
+      return false;
+    }
+
+    // Update your form's onsubmit handler
+    document.getElementById('loanForm').onsubmit = validateAndCalculate;
+
+    function saveLoanToHistory(loanDetails) {
+      // Get existing history or initialize new array
+      let loanHistory = JSON.parse(localStorage.getItem('loanHistory')) || [];
+      
+      // Add new calculation to beginning of array
+      loanHistory.unshift({
+        date: new Date().toISOString(),
+        bank: loanDetails.bank,
+        loanType: loanDetails.loanType,
+        loanAmount: loanDetails.loanAmount,
+        interestRate: loanDetails.interestRate,
+        loanTenure: loanDetails.loanTenure,
+        monthlyEMI: loanDetails.emi,
+        totalInterest: loanDetails.totalInterest,
+        totalAmount: loanDetails.totalAmount
+      });
+      
+      // Keep only last 10 calculations
+      if (loanHistory.length > 10) {
+        loanHistory = loanHistory.slice(0, 10);
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('loanHistory', JSON.stringify(loanHistory));
+    }
+
+    // Function to toggle the visibility of the salary section based on profession
+    function toggleSalarySection() {
+        const professionInput = document.getElementById('profession').value.toLowerCase();
+        const salarySection = document.getElementById('salarySection');
+
+        if (professionInput === 'student') {
+            salarySection.classList.add('hidden'); // Hide salary section
+            document.getElementById('salary').value = ''; // Clear salary input
+        } else {
+            salarySection.classList.remove('hidden'); // Show salary section
+        }
+    }
+
+    function calculateLoan(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get input values
+        const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+        const interestRate = parseFloat(document.getElementById('interestRate').value);
+        const loanTerm = parseFloat(document.getElementById('loanTerm').value);
+
+        // Validate inputs
+        if (isNaN(loanAmount) || isNaN(interestRate) || isNaN(loanTerm)) {
+            alert('Please enter valid numbers');
+            return;
+        }
+
+        // Calculate loan details
+        const monthlyRate = interestRate / 1200;
+        const numberOfPayments = loanTerm * 12;
+        const monthlyPayment = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numberOfPayments)) / (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
+        const totalPayment = monthlyPayment * numberOfPayments;
+        const totalInterest = totalPayment - loanAmount;
+
+        // Create history item
+        const historyItem = {
+            date: new Date().toISOString(),
+            loanAmount: loanAmount,
+            interestRate: interestRate,
+            loanTerm: loanTerm,
+            monthlyPayment: monthlyPayment,
+            totalInterest: totalInterest,
+            totalPayment: totalPayment
+        };
+
+        // Save to history
+        let loanHistory = JSON.parse(localStorage.getItem('loanHistory')) || [];
+        loanHistory.push(historyItem);
+        localStorage.setItem('loanHistory', JSON.stringify(loanHistory));
+
+        // Display results
+        document.getElementById('monthlyPayment').textContent = '₹' + monthlyPayment.toFixed(2);
+        document.getElementById('totalPayment').textContent = '₹' + totalPayment.toFixed(2);
+        document.getElementById('totalInterest').textContent = '₹' + totalInterest.toFixed(2);
+
+        // Show results
+        document.getElementById('results').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

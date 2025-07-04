@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services - LoanSmart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e2a78, #ff3c7b);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .services-container {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 2rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            color: #00A3FF;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="logo-section">
+            <img src="img/logo.jpg" alt="LoanSmart Logo" class="logo-img">
+            <h1>LoanSmart</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="services.html" class="active">Our Services</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <div class="services-container">
+        <h1 class="section-title">Our Services</h1>
+        <p class="section-subtitle">Discover our comprehensive range of loan services designed to meet your financial needs</p>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-home service-icon"></i>
+                <h3 class="service-title">Home Loans</h3>
+                <p class="service-description">
+                    Make your dream home a reality with our competitive home loan options starting from 6.5% p.a.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <i class="fas fa-car service-icon"></i>
+                <h3 class="service-title">Car Loans</h3>
+                <p class="service-description">
+                    Drive your dream car with our hassle-free car loans at attractive interest rates from 7.5% p.a.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <i class="fas fa-graduation-cap service-icon"></i>
+                <h3 class="service-title">Education Loans</h3>
+                <p class="service-description">
+                    Invest in your future with our education loans designed specifically for students at 8% p.a.
+                </p>
+            </div>
+
+            <div class="service-card">
+                <i class="fas fa-briefcase service-icon"></i>
+                <h3 class="service-title">Business Loans</h3>
+                <p class="service-description">
+                    Grow your business with our flexible business loan options up to ₹50 Lakhs.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

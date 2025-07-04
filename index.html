@@ -1,0 +1,3326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoanSmart - Smart Loan Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #00A3FF, #0057FF);
+            --text-gradient: linear-gradient(135deg, #00A3FF, #0057FF);
+        }
+
+        body {
+            background: #0A0A0A;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .gradient-text {
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0; /* Adjusted padding */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo img {
+            height: 40px; /* Adjust logo height */
+            width: auto; /* Maintain aspect ratio */
+        }
+
+        .menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .menu a:nth-child(1) { animation-delay: 0.2s; }
+        .menu a:nth-child(2) { animation-delay: 0.4s; }
+        .menu a:nth-child(3) { animation-delay: 0.6s; }
+
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #00A3FF;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .menu a:hover::after {
+            width: 80%;
+        }
+
+        .menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        section {
+            padding: 6rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            padding-top: 8rem;
+            position: relative;
+            overflow: hidden;
+            background: url('img/home.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Parallax effect */
+            z-index: 1;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            text-align: center;
+            position: relative;
+            z-index: 3;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUpIn 1s ease-out forwards;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+            animation: glowText 2s ease-in-out infinite alternate;
+        }
+
+        .hero-description {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin-top: 0.5rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        .why-us {
+            padding: 6rem 2rem;
+            position: relative;
+            background: #0A0A0A;
+            overflow: hidden;
+        }
+
+        .gradient-blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(0, 163, 255, 0.1), rgba(0, 87, 255, 0.1));
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        .blob-1 {
+            top: -200px;
+            right: -200px;
+        }
+
+        .why-us-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+            animation: countUp 0.8s ease-out forwards;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #00A3FF;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            color: #00A3FF;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Add animation for stats */
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            animation: countUp 0.8s ease-out forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .why-us {
+                padding: 4rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 163, 255, 0.3);
+            z-index: 10;
+            position: relative;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 163, 255, 0.4);
+        }
+
+        .button-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover .button-arrow {
+            transform: translateX(5px);
+        }
+
+        .contact-section {
+            display: none;
+            padding: 6rem 2rem;
+            min-height: 100vh;
+            background: #0A0A0A;
+            color: white;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-info h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #00A3FF;
+        }
+
+        .contact-info p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .contact-info ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info ul li {
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info ul li:hover {
+            color: #00A3FF;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-icons a:hover {
+            color: #00A3FF;
+            transform: translateY(-5px);
+        }
+
+        .contact-form {
+            display: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+            margin: 5% auto;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.4s ease-out;
+            transform-origin: top;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(0, 163, 255, 0.5);
+            border-radius: 4px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 163, 255, 0.7);
+        }
+
+        .modal-content h2 {
+            color: #00A3FF;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            margin: 0.8rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content input:focus {
+            border-color: #00A3FF;
+            box-shadow: 0 0 15px rgba(0,163,255,0.2);
+            outline: none;
+            transform: translateY(-2px);
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,163,255,0.3);
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            color: #00A3FF;
+            transform: rotate(90deg);
+        }
+
+        .form-links {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .action-btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .forgot-btn {
+            background: linear-gradient(135deg, #FF6B6B, #FF4646);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            box-shadow: 0 4px 15px rgba(0, 163, 255, 0.2);
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hover-effect {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .action-btn:hover .hover-effect {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-btn:hover .btn-icon {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .forgot-btn:hover {
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .register-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 163, 255, 0.3);
+        }
+
+        /* Active state */
+        .action-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Focus state */
+        .action-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            .form-links {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+
+            .action-btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-icon {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Add this to your existing modal styles */
+        .modal-content {
+            /* ... existing styles ... */
+            max-width: 400px; /* Adjusted for better button layout */
+        }
+
+        /* Update your existing button styles to match the new design */
+        .login-btn, .reset-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #4ECB71, #2ECC71);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(78, 203, 113, 0.2);
+        }
+
+        .login-btn:hover, .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78, 203, 113, 0.3);
+        }
+
+        .login-btn:active, .reset-btn:active {
+            transform: translateY(1px);
+        }
+
+        .radio-group {
+            margin: 1rem 0;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .loan-need {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .loan-need label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #00A3FF;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Form validation styles */
+        .input-group {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .input-group input:valid {
+            border-color: #00ff9d;
+        }
+
+        .input-group input:invalid:not(:placeholder-shown) {
+            border-color: #ff4646;
+        }
+
+        .error-message {
+            color: #ff4646;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .input-group input:invalid:not(:placeholder-shown) + .error-message {
+            display: block;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* New Animations */
+        @keyframes fadeUpIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes glowText {
+            from {
+                text-shadow: 0 0 10px rgba(0, 163, 255, 0.5),
+                             0 0 20px rgba(0, 163, 255, 0.3),
+                             0 0 30px rgba(0, 163, 255, 0.1);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(0, 163, 255, 0.8),
+                             0 0 30px rgba(0, 163, 255, 0.5),
+                             0 0 40px rgba(0, 163, 255, 0.3);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-description {
+                font-size: 1.2rem;
+            }
+
+            .gradient-blob {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            display: flex;
+            gap: 2px;
+        }
+
+        .logo-title span {
+            display: inline-block;
+            animation: colorChange 8s linear infinite;
+        }
+
+        /* Stagger the animations for each letter */
+        .logo-title span:nth-child(1) { animation-delay: 0s; }
+        .logo-title span:nth-child(2) { animation-delay: 0.2s; }
+        .logo-title span:nth-child(3) { animation-delay: 0.4s; }
+        .logo-title span:nth-child(4) { animation-delay: 0.6s; }
+        .logo-title span:nth-child(5) { animation-delay: 0.8s; }
+        .logo-title span:nth-child(6) { animation-delay: 1s; }
+        .logo-title span:nth-child(7) { animation-delay: 1.2s; }
+        .logo-title span:nth-child(8) { animation-delay: 1.4s; }
+        .logo-title span:nth-child(9) { animation-delay: 1.6s; }
+
+        @keyframes colorChange {
+            0% { color: #00A3FF; }
+            20% { color: #FF6B6B; }
+            40% { color: #4ECB71; }
+            60% { color: #FFA502; }
+            80% { color: #9B59B6; }
+            100% { color: #00A3FF; }
+        }
+
+        @keyframes logoFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Update existing nav styles */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 10, 0.95);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .menu a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00A3FF;
+            transition: width 0.3s ease;
+        }
+
+        .menu a:hover::after {
+            width: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .logo-title {
+                font-size: 1.8rem;
+            }
+
+            .logo-img {
+                width: 40px;
+                height: 40px;
+            }
+
+            nav {
+                padding: 1rem;
+            }
+
+            .menu {
+                gap: 1rem;
+            }
+
+            .menu a {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-title {
+                font-size: 1.5rem;
+            }
+
+            .logo-img {
+                width: 35px;
+                height: 35px;
+            }
+
+            .menu {
+                gap: 0.8rem;
+            }
+        }
+
+        /* Update the scrolling section styles */
+        .scrolling-section {
+            padding: 2rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .scroll-container {
+            margin: 1rem 0;
+        }
+
+        .banks-scroll .scroll-content {
+            display: flex;
+            gap: 2rem;
+            animation: scroll 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .features-scroll .scroll-content {
+            display: flex;
+            gap: 2rem;
+            animation: scroll-reverse 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .scroll-item {
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-icon {
+            font-size: 1.2rem;
+        }
+
+        @keyframes scroll {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes scroll-reverse {
+            from {
+                transform: translateX(-50%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        /* Add hover effect for scroll items */
+        .scroll-item:hover {
+            color: #00A3FF;
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        /* Add these styles to your existing styles */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .divider span {
+            padding: 0 10px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .google-btn {
+            margin-top: 10px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-submit-btn {
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .login-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 163, 255, 0.3);
+        }
+
+        /* Header Styles */
+        .landing-header {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-section h1 {
+            color: #00A3FF;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Footer Styles */
+        .site-footer {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: #00A3FF;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #00A3FF;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: #00A3FF;
+            transform: translateY(-3px);
+        }
+
+        .social-link i {
+            font-size: 1.2rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        /* Adjust main content to account for fixed header */
+        .main-content {
+            margin-top: 80px;
+            margin-bottom: 100px;
+        }
+
+        /* Ensure login form appears properly with new header */
+        .login-container {
+            margin-top: 120px;
+        }
+
+        /* Loan Types Section Styles */
+        .loan-types-section {
+            padding: 6rem 2rem;
+            background: #0A0A0A;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .loan-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .loan-type-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .loan-type-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .loan-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .loan-type-card h3 {
+            color: #00A3FF;
+            margin-bottom: 1rem;
+        }
+
+        .loan-type-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .loan-features {
+            list-style: none;
+            padding: 0;
+        }
+
+        .loan-features li {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .loan-features li::before {
+            content: '✓';
+            color: #00A3FF;
+            position: absolute;
+            left: 0;
+        }
+
+        /* Benefits Section Styles */
+        .benefits-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(to bottom, #0A0A0A, #151515);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            color: #00A3FF;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Testimonials Section Styles */
+        .testimonials-section {
+            padding: 6rem 2rem;
+            background: #0A0A0A;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .testimonial-rating {
+            color: #FFD700;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .testimonial-author h4 {
+            color: #00A3FF;
+            margin: 0;
+        }
+
+        .testimonial-author span {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .loan-types-section,
+            .benefits-section,
+            .testimonials-section {
+                padding: 4rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .loan-type-card,
+            .benefit-card,
+            .testimonial-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Graphs Container Styles */
+        .graphs-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin: 4rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .graph-section {
+            text-align: center;
+        }
+
+        .graph-section h3 {
+            color: #00A3FF;
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        /* Bar Graph Styles */
+        .bar-graph {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .bar-container {
+            position: relative;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #00A3FF, #0057FF);
+            border-radius: 20px;
+            width: 0;
+            transition: width 1.5s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        .bar-label {
+            color: white;
+            font-weight: 500;
+            z-index: 1;
+        }
+
+        .percentage {
+            color: white;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        /* Circle Graph Styles */
+        .circle-graph {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .circle-progress {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.1);
+            stroke-width: 12;
+        }
+
+        .circle-progress-path {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 12;
+            stroke-dasharray: 339.292;
+            stroke-dashoffset: 339.292;
+            transition: stroke-dashoffset 1.5s ease-in-out;
+        }
+
+        .circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .circle-percentage {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00A3FF;
+            display: block;
+        }
+
+        .circle-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+
+        .comparison-text {
+            margin-top: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .graph-section {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Metrics Container Styles */
+        .metrics-container {
+            margin: 4rem 0;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metrics-title {
+            color: #00A3FF;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .metric-item {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .metric-value {
+            color: #00A3FF;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #00A3FF, #0057FF);
+            border-radius: 4px;
+            transition: width 1.5s ease-in-out;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Add this to your existing animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .metric-item {
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .metric-item:nth-child(1) { animation-delay: 0.1s; }
+        .metric-item:nth-child(2) { animation-delay: 0.2s; }
+        .metric-item:nth-child(3) { animation-delay: 0.3s; }
+        .metric-item:nth-child(4) { animation-delay: 0.4s; }
+
+        @media (max-width: 768px) {
+            .metrics-container {
+                padding: 1.5rem;
+                margin: 2rem 0;
+            }
+
+            .metrics-title {
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .metric-item {
+                padding: 1rem;
+            }
+        }
+
+        /* Chat Widget Styles */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 163, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-icon {
+            font-size: 24px;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: #FF4B4B;
+            border-radius: 50%;
+            border: 2px solid #0A0A0A;
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 350px;
+            height: 500px;
+            background: #0A0A0A;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+
+        .bot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .online-status {
+            font-size: 0.8rem;
+            color: #4CAF50;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .bot-message, .user-message {
+            max-width: 80%;
+            padding: 0.8rem 1rem;
+            border-radius: 15px;
+            margin-bottom: 0.5rem;
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .quick-questions button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .quick-questions button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .chat-input {
+            padding: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .chat-input button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .chat-container {
+                width: calc(100% - 40px);
+                height: 60vh;
+                bottom: 80px;
+                right: 20px;
+            }
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+            margin: 5% auto;
+            padding: 2.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.4s ease-out;
+            transform-origin: top;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.5);
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        .modal-content h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #00A3FF;
+            font-size: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #00A3FF;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0,163,255,0.2);
+        }
+
+        .login-btn, .register-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .login-btn:hover, .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,163,255,0.4);
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .form-footer a {
+            color: #00A3FF;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .form-footer a:hover {
+            color: #0057FF;
+        }
+
+        .forgot-link {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 10% auto;
+                padding: 2rem;
+            }
+        }
+
+        /* Add these new styles */
+        .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        .form-select:focus {
+            border-color: #00A3FF;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0,163,255,0.2);
+        }
+
+        .form-select option {
+            background: #1a1a1a;
+            color: white;
+        }
+
+        .terms-group {
+            margin: 1.5rem 0;
+        }
+
+        .terms-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .terms-label input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .terms-label a {
+            color: #00A3FF;
+            text-decoration: none;
+        }
+
+        .terms-label a:hover {
+            text-decoration: underline;
+        }
+
+        /* Custom checkbox styles */
+        .terms-label input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            position: relative;
+            display: inline-block;
+            height: 20px;
+            width: 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .terms-label:hover input ~ .checkmark {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .terms-label input:checked ~ .checkmark {
+            background: #00A3FF;
+            border-color: #00A3FF;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .terms-label input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #00A3FF;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 80%;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(0, 163, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.highlight {
+            background: linear-gradient(135deg, #00A3FF, #0057FF);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 163, 255, 0.3);
+            cursor: pointer;
+        }
+
+        .nav-link.highlight:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 163, 255, 0.4);
+            background: linear-gradient(135deg, #0057FF, #00A3FF);
+        }
+
+        /* Add this JavaScript for smooth scrolling and active state */
+
+        /* Bank Names Scroll */
+        .scrolling-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            margin: 2rem 0;
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .scroll-container {
+            width: 100%;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .scroll-content {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .scroll-content.reverse {
+            animation: scroll-reverse 30s linear infinite;
+        }
+
+        .scroll-item {
+            padding: 1rem 2rem;
+            margin: 0 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            min-width: max-content;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .scroll-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 163, 255, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes scroll-reverse {
+            0% {
+                transform: translateX(-50%);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        /* Make sure the section is visible */
+        .scrolling-section {
+            display: block !important;
+            position: relative;
+            z-index: 2;
+        }
+
+        .scroll-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .scroll-item:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 163, 255, 0.2);
+        }
+
+        .bank-logo {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+        }
+
+        .scroll-item span {
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            margin-right: 0.5rem;
+        }
+    </style>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all navigation links
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        // Add active class to current page link
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    });
+
+    // Function to open login modal
+    function openLoginModal() {
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            loginModal.style.display = 'block';
+        }
+    }
+
+    // Add this loadPage function
+    function loadPage(page) {
+        fetch(page)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Page not found');
+                }
+                return response.text();
+            })
+            .then(html => {
+                // Hide the main sections
+                const mainSections = document.querySelectorAll('.hero-section, .why-us, .scrolling-section, .loan-types-section, .benefits-section, .testimonials-section');
+                mainSections.forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Show the content area and update its content
+                const contentArea = document.getElementById('content-area');
+                contentArea.style.display = 'block';
+                contentArea.innerHTML = html;
+
+                // Update active state in navigation
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === page) {
+                        link.classList.add('active');
+                    }
+                });
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            })
+            .catch(error => {
+                console.error('Error loading page:', error);
+                alert('Error loading page. Please try again.');
+            });
+    }
+
+    // Update the nav click handlers
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                
+                // Don't prevent default for the "Get Started" button
+                if (this.classList.contains('highlight')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                
+                if (href === 'index.html') {
+                    // Show home page
+                    window.location.href = 'index.html';
+                } else if (href === 'services.html') {
+                    loadPage('services.html');
+                } else if (href === 'about.html') {
+                    loadPage('about.html');
+                } else if (href === 'contact.html') {
+                    loadPage('contact.html');
+                }
+            });
+        });
+    });
+
+    // Function to show home page content
+    function showHome() {
+        const mainSections = document.querySelectorAll('.hero-section, .why-us, .scrolling-section, .loan-types-section, .benefits-section, .testimonials-section');
+        mainSections.forEach(section => {
+            section.style.display = 'block';
+        });
+        document.getElementById('content-area').style.display = 'none';
+        
+        // Update active state in navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === 'index.html') {
+                link.classList.add('active');
+            }
+        });
+    }
+    </script>
+</head>
+<body>
+    <!-- Add this header right after <body> tag -->
+    <header class="landing-header">
+        <div class="logo-section">
+            <img src="img/logo.jpg" alt="LoanSmart Logo" class="logo-img">
+            <h1 class="logo-title">
+                <span>Loan</span>
+                <span>Smart</span>
+            </h1>
+        </div>
+        <nav>
+            <div class="menu">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="services.html" class="nav-link">Our Services</a>
+                <a href="about.html" class="nav-link">About Us</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="#" class="nav-link highlight" onclick="openLoginModal()">Get Started</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Add this right after the nav section and before the hero section -->
+    <div class="scrolling-section">
+        <!-- Bank Names Scroll -->
+        <div class="scroll-container">
+            <div class="scroll-content">
+                <div class="scroll-item">HDFC BANK</div>
+                <div class="scroll-item">STATE BANK OF INDIA</div>
+                <div class="scroll-item">ICICI BANK</div>
+                <div class="scroll-item">AXIS BANK</div>
+                <div class="scroll-item">KOTAK MAHINDRA</div>
+                <div class="scroll-item">IDFC FIRST BANK</div>
+                <!-- Duplicate for continuous scroll -->
+                <div class="scroll-item">HDFC BANK</div>
+                <div class="scroll-item">STATE BANK OF INDIA</div>
+                <div class="scroll-item">ICICI BANK</div>
+                <div class="scroll-item">AXIS BANK</div>
+                <div class="scroll-item">KOTAK MAHINDRA</div>
+                <div class="scroll-item">IDFC FIRST BANK</div>
+            </div>
+        </div>
+
+        <!-- Features Scroll -->
+        <div class="scroll-container features-scroll">
+            <div class="scroll-content reverse">
+                <div class="scroll-item">
+                    <span class="feature-icon">📊</span> Check Your Eligibility
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">💰</span> Calculate Monthly EMI
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">📈</span> Best Interest Rates
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">⚡</span> Instant Approval
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">🔒</span> Secure Process
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">📱</span> Easy Application
+                </div>
+                <!-- Duplicate for continuous scroll -->
+                <div class="scroll-item">
+                    <span class="feature-icon">📊</span> Check Your Eligibility
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">💰</span> Calculate Monthly EMI
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">📈</span> Best Interest Rates
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">⚡</span> Instant Approval
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">🔒</span> Secure Process
+                </div>
+                <div class="scroll-item">
+                    <span class="feature-icon">📱</span> Easy Application
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="animated-bg">
+        <div class="gradient-sphere sphere-1"></div>
+        <div class="gradient-sphere sphere-2"></div>
+        <div class="gradient-sphere sphere-3"></div>
+        
+        <div class="glow-line line-1"></div>
+        <div class="glow-line line-2"></div>
+        <div class="glow-line line-3"></div>
+        <div class="glow-line line-4"></div>
+        
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+        <div class="particle particle-4"></div>
+        <div class="particle particle-5"></div>
+    </div>
+
+    <section id="home" class="hero-section">
+        <div class="gradient-blob blob-1"></div>
+        <div class="gradient-blob blob-2"></div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title" style="margin-bottom: 0.5rem;">
+                <span class="logo-title">
+                    <span class="gradient-text">Smart</span><br>
+                    <span>Loan</span>
+                    <span>Solutions</span>
+                </span>
+                <br>for Your Needs
+            </h1>
+            <p class="hero-description" style="margin-top: 0.5rem;">
+                Discover personalized loan options tailored to your needs. Get instant comparisons, eligibility checks, and the best rates available.
+            </p>
+            <button class="cta-button" onclick="openLoginModal()">
+                Get Free Loan
+                <span class="button-arrow">→</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Loan Types Section -->
+    <section class="loan-types-section">
+        <div class="container">
+            <h2 class="section-title">Explore Our <span class="gradient-text">Loan Options</span></h2>
+            <p class="section-subtitle">Find the perfect loan solution tailored to your specific needs</p>
+            
+            <div class="loan-types-grid">
+                <div class="loan-type-card">
+                    <div class="loan-icon">🏠</div>
+                    <h3>Home Loans</h3>
+                    <p>Make your dream home a reality with competitive interest rates starting from 6.5% p.a.</p>
+                    <ul class="loan-features">
+                        <li>Up to ₹5 Crore</li>
+                        <li>30 years tenure</li>
+                        <li>Quick approval</li>
+                    </ul>
+                </div>
+                
+                <div class="loan-type-card">
+                    <div class="loan-icon">🚗</div>
+                    <h3>Car Loans</h3>
+                    <p>Drive home your dream car with hassle-free car loans at 7.5% p.a.</p>
+                    <ul class="loan-features">
+                        <li>100% financing</li>
+                        <li>Flexible tenure</li>
+                        <li>Zero foreclosure charges</li>
+                    </ul>
+                </div>
+                
+                <div class="loan-type-card">
+                    <div class="loan-icon">📚</div>
+                    <h3>Education Loans</h3>
+                    <p>Invest in your future with education loans starting at 8% p.a.</p>
+                    <ul class="loan-features">
+                        <li>Up to ₹75 Lakhs</li>
+                        <li>Study anywhere globally</li>
+                        <li>Moratorium period</li>
+                    </ul>
+                </div>
+                
+                <div class="loan-type-card">
+                    <div class="loan-icon">💼</div>
+                    <h3>Business Loans</h3>
+                    <p>Grow your business with collateral-free loans up to ₹50 Lakhs</p>
+                    <ul class="loan-features">
+                        <li>Minimal documentation</li>
+                        <li>48-hour disbursement</li>
+                        <li>Flexible repayment</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <h2 class="section-title">Why Choose <span class="gradient-text">LoanSmart</span></h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Quick Processing</h3>
+                    <p>Get loan approval in as little as 24 hours with our streamlined digital process</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">💰</div>
+                    <h3>Best Interest Rates</h3>
+                    <p>Compare and choose from 30+ banks to get the most competitive interest rates</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">📱</div>
+                    <h3>Digital Journey</h3>
+                    <p>Complete your entire loan journey from application to disbursement online</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛡️</div>
+                    <h3>Safe & Secure</h3>
+                    <p>Your data is protected with bank-grade security and encryption</p>
+                </div>
+            </div>
+
+            <!-- Add this after the stats-grid div -->
+            <div class="graphs-container">
+                <div class="graph-section">
+                    <h3>Loan Approval Success Rate</h3>
+                    <div class="graph-wrapper">
+                        <div class="bar-graph">
+                            <div class="bar-container">
+                                <div class="bar" data-percentage="95">
+                                    <span class="bar-label">LoanSmart</span>
+                                    <span class="percentage">95%</span>
+                                </div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar" data-percentage="75">
+                                    <span class="bar-label">Others</span>
+                                    <span class="percentage">75%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="graph-section">
+                    <h3>Average Processing Time (Days)</h3>
+                    <div class="graph-wrapper">
+                        <div class="circle-graph">
+                            <svg class="circle-progress" viewBox="0 0 120 120">
+                                <circle class="circle-bg" cx="60" cy="60" r="54"/>
+                                <circle class="circle-progress-path" cx="60" cy="60" r="54"/>
+                            </svg>
+                            <div class="circle-text">
+                                <span class="circle-percentage">2</span>
+                                <span class="circle-label">Days</span>
+                            </div>
+                        </div>
+                        <div class="comparison-text">
+                            Industry Average: 7 Days
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section">
+        <div class="container">
+            <h2 class="section-title">What Our Customers <span class="gradient-text">Say</span></h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                    <p>"Got my home loan approved in just 3 days! The best rates and amazing service."</p>
+                    <div class="testimonial-author">
+                        <img src="img/testimonial1.jpg" alt="Rahul Sharma">
+                        <div>
+                            <h4>Rahul Choudhary</h4>
+                            <span>Home Loan Customer</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                    <p>"LoanSmart made my education loan process completely hassle-free. Highly recommended!"</p>
+                    <div class="testimonial-author">
+                        <img src="img/testimonial2.jpg" alt="Priya Patel">
+                        <div>
+                            <h4>Priya </h4>
+                            <span>Education Loan Customer</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                    <p>"The best part was comparing different banks' offers. Saved a lot on interest!"</p>
+                    <div class="testimonial-author">
+                        <img src="img/testimonial3.jpg" alt="Amit Kumar">
+                        <div>
+                            <h4>Amitabh</h4>
+                            <span>Business Loan Customer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="why-us" class="why-us">
+        <div class="gradient-blob blob-1"></div>
+        <div class="why-us-container">
+            <h2 class="section-title">Why Choose <span class="gradient-text">LoanSmart</span></h2>
+            <p class="section-subtitle">We combine cutting-edge technology with financial expertise to deliver the most accurate and personalized loan recommendations.</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" data-target="95">0</div>
+                    <div class="stat-label">% Accuracy Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="1000">0</div>
+                    <div class="stat-label">Happy Customers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="10">0</div>
+                    <div class="stat-label">Bank Partners</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-target="24">0</div>
+                    <div class="stat-label">Hour Support</div>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Advanced Analysis</h3>
+                    <p class="feature-description">Our technology analyzes multiple factors to find the perfect loan match for your specific needs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Instant Results</h3>
+                    <p class="feature-description">Get loan recommendations and eligibility checks in seconds, not days.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Secure & Confidential</h3>
+                    <p class="feature-description">Your data is protected with bank-grade security and encryption.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">Best Rates Guaranteed</h3>
+                    <p class="feature-description">We compare rates from over 100 banks to ensure you get the best deal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            
+            <!-- Login Form -->
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <h2>WELCOME BACK</h2>
+                <div class="form-group">
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                <div class="form-actions">
+                    <div class="helper-links">
+                        <button type="button" class="forgot-btn" onclick="showForgotPassword()">
+                            <i class="fas fa-key"></i>
+                            Forgot Password
+                        </button>
+                        <button type="button" class="register-btn" onclick="showRegisterForm()">
+                            <i class="fas fa-user-plus"></i>
+                            Register Now
+                        </button>
+                    </div>
+                    <button type="submit" class="login-btn">Login</button>
+                </div>
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+                <div id="g_id_onload"
+                     data-client_id="454629311043-3kkr4nnf3p79r8g7qre0uu4kkanbckc2.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-callback="handleGoogleSignIn"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                     data-type="standard"
+                     data-size="large"
+                     data-theme="outline"
+                     data-text="sign_in_with"
+                     data-shape="rectangular"
+                     data-logo_alignment="left">
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" onsubmit="return handleRegister(event)" style="display: none;">
+                <h2>CREATE ACCOUNT</h2>
+                <div class="form-group">
+                    <input type="text" id="regName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="regEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="regMobile" placeholder="Mobile Number" pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="regPassword" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+                </div>
+                <div class="form-group">
+                    <select id="loanRequired" class="form-select" required>
+                        <option value="">Do you need a loan?</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+                <div class="form-group terms-group">
+                    <label class="terms-label">
+                        <input type="checkbox" id="termsAccepted" required>
+                        <span class="checkmark"></span>
+                        I accept the <a href="#" onclick="showTerms(event)">Terms & Conditions</a>
+                    </label>
+                </div>
+                <button type="submit" class="register-btn">Create Account</button>
+                <div class="form-footer">
+                    <p>Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for User Input -->
+    <div id="userInputModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Enter Your Details</h2>
+            <label for="profession">Profession:</label>
+            <input type="text" id="profession" placeholder="Enter your profession">
+            <label for="salary">Salary:</label>
+            <input type="number" id="salary" placeholder="Enter your salary">
+            <button onclick="checkEligibility()">Submit</button>
+        </div>
+    </div>
+
+    <!-- Section to display eligible loans -->
+    <div id="loanEligibility" style="display:none;">
+        <h2>Eligible Loans</h2>
+        <ul id="loanList"></ul>
+        <button onclick="openLoanCalculator()">Loan Calculator</button>
+    </div>
+
+    <!-- Add this footer before closing </body> tag -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="#" onclick="loadPage('terms.html')">Terms & Conditions</a>
+                <a href="#" onclick="loadPage('privacy.html')">Privacy Policy</a>
+                <a href="about.html">About Us</a>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="https://instagram.com/loansmart" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://linkedin.com/company/loansmart" target="_blank" class="social-link">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:contact@loansmart.com" class="social-link">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 LoanSmart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="content-area"></div>
+
+    <!-- Add this floating chat button and chat interface -->
+    <div class="chat-widget">
+        <button class="chat-button" onclick="toggleChat()">
+            <span class="chat-icon">💬</span>
+            <span class="notification-dot"></span>
+        </button>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <img src="img/logo.jpg" alt="LoanSmart Bot" class="bot-avatar">
+                    <div>
+                        <h3>LoanSmart Assistant</h3>
+                        <span class="online-status">Online</span>
+                    </div>
+                </div>
+                <button class="close-chat" onclick="toggleChat()">×</button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="bot-message">
+                    Hello! 👋 I'm your LoanSmart Assistant. How can I help you today?
+                </div>
+                <div class="quick-questions">
+                    <button onclick="handleQuickQuestion('What loans do you offer?')">What loans do you offer?</button>
+                    <button onclick="handleQuickQuestion('How to apply for a loan?')">How to apply for a loan?</button>
+                    <button onclick="handleQuickQuestion('What documents are required?')">What documents are required?</button>
+                    <button onclick="handleQuickQuestion('What are the interest rates?')">What are the interest rates?</button>
+                </div>
+            </div>
+            
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type your question here..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to toggle section visibility
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section.style.display === "none" || section.style.display === "") {
+                section.style.display = "block";
+                section.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                section.style.display = "none";
+            }
+        }
+
+        // Add event listeners to menu items
+        document.querySelectorAll('.menu a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetSection = this.getAttribute('href').substring(1); // Remove the '#' from href
+                toggleSection(targetSection);
+            });
+        });
+
+        // Stats animation function
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Initialize stats animation
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const target = parseInt(stat.getAttribute('data-target'));
+                        animateValue(stat, 0, target, 2000);
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe stats section
+        const statsGrid = document.querySelector('.stats-grid');
+        if (statsGrid) {
+            statsObserver.observe(statsGrid);
+        }
+
+        // Function to open login modal
+        function openLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) {
+                modal.style.display = 'block';
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+            }
+        }
+
+        // Function to show login form
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
+
+        // Function to show register form
+        function showRegisterForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        // Function to handle forgot password
+        function showForgotPassword() {
+            const email = prompt('Enter your email address:');
+            if (email) {
+                // Here you would typically make an API call to handle password reset
+                alert('If an account exists with this email, you will receive password reset instructions.');
+            }
+        }
+
+        // Function to handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if ((username === 'main' && password === 'password') || 
+                (username === localStorage.getItem('registeredEmail') && 
+                 password === localStorage.getItem('registeredPassword'))) {
+                window.location.href = 'cal.html';
+            } else {
+                alert('Invalid credentials. Please try again.');
+            }
+        }
+
+        // Function to handle registration
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const mobile = document.getElementById('regMobile').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const loanRequired = document.getElementById('loanRequired').value;
+            const termsAccepted = document.getElementById('termsAccepted').checked;
+
+            // Validate mobile number
+            if (!/^\d{10}$/.test(mobile)) {
+                alert('Please enter a valid 10-digit mobile number');
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return false;
+            }
+
+            if (!termsAccepted) {
+                alert('Please accept the Terms & Conditions');
+                return false;
+            }
+
+            // Store user data
+            localStorage.setItem('registeredEmail', email);
+            localStorage.setItem('registeredPassword', password);
+            localStorage.setItem('registeredMobile', mobile);
+            localStorage.setItem('registeredName', name);
+            localStorage.setItem('loanRequired', loanRequired);
+
+            alert('Registration successful! Please login.');
+            showLoginForm();
+        }
+
+        // Function to handle Google Sign-In
+        function handleGoogleSignIn(response) {
+            // Decode the JWT token
+            const responsePayload = jwt_decode(response.credential);
+            
+            console.log("Google Sign-In successful!");
+            console.log("Email: " + responsePayload.email);
+            console.log("Name: " + responsePayload.name);
+            
+            // Store user info
+            localStorage.setItem('googleUser', JSON.stringify({
+                email: responsePayload.email,
+                name: responsePayload.name,
+                picture: responsePayload.picture
+            }));
+
+            // Redirect to calculator page
+            window.location.href = 'cal.html';
+        }
+
+        // Function to show terms
+        function showTerms(event) {
+            event.preventDefault();
+            alert('Terms & Conditions:\n\n' +
+                  '1. By creating an account, you agree to provide accurate information\n' +
+                  '2. Your personal information will be handled as per our privacy policy\n' +
+                  '3. You agree to receive updates about your loan application\n' +
+                  '4. LoanSmart reserves the right to approve or reject loan applications');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close button functionality
+        document.querySelector('.close')?.addEventListener('click', function() {
+            document.getElementById('loginModal').style.display = 'none';
+        });
+
+        // Function to check if elements are in viewport
+        function isInViewport(element) {
+            const rect = element.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        // Pause animations when section is not in viewport
+        window.addEventListener('scroll', () => {
+            const scrollSection = document.querySelector('.scrolling-section');
+            if (isInViewport(scrollSection)) {
+                document.querySelectorAll('.scroll-content').forEach(content => {
+                    content.style.animationPlayState = 'running';
+                });
+            } else {
+                document.querySelectorAll('.scroll-content').forEach(content => {
+                    content.style.animationPlayState = 'paused';
+                });
+            }
+        });
+
+        // Function to check eligibility
+        function checkEligibility() {
+            const profession = document.getElementById('profession').value;
+            const salary = document.getElementById('salary').value;
+
+            // Placeholder logic for eligibility check
+            const eligible = true; // Replace with actual logic
+
+            if (eligible) {
+                document.getElementById('loanEligibility').style.display = 'block';
+                document.getElementById('loanList').innerHTML = '<li>Eligible for a loan</li>';
+            } else {
+                alert('Sorry, you are not eligible for a loan.');
+            }
+        }
+
+        // Function to open loan calculator
+        function openLoanCalculator() {
+            document.getElementById('userInputModal').style.display = 'block';
+        }
+
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('userInputModal').style.display = 'none';
+        }
+
+        // Add this function to show home page content
+        function showHome() {
+            document.querySelector('.hero-section').style.display = 'flex';
+            document.querySelector('.why-us').style.display = 'block';
+            document.querySelector('.scrolling-section').style.display = 'block';
+            document.getElementById('content-area').style.display = 'none';
+        }
+
+        // Update the nav click handlers
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                
+                if (href === '#home') {
+                    showHome();
+                } else if (href === '#services') {
+                    loadPage('ourservices.html');
+                } else if (href === '#contact') {
+                    loadPage('contact.html');
+                } else if (href.startsWith('#')) {
+                    const targetSection = href.substring(1);
+                    toggleSection(targetSection);
+                }
+            });
+        });
+
+        // Add this JavaScript for the counting animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const stats = document.querySelectorAll('.stat-number');
+            
+            const observerOptions = {
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = parseInt(entry.target.getAttribute('data-target'));
+                        animateCount(entry.target, target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            stats.forEach(stat => observer.observe(stat));
+
+            function animateCount(element, target) {
+                let current = 0;
+                const duration = 2000; // 2 seconds
+                const step = target / (duration / 16); // 60fps
+
+                function update() {
+                    current += step;
+                    if (current < target) {
+                        element.textContent = Math.floor(current);
+                        requestAnimationFrame(update);
+                    } else {
+                        element.textContent = target;
+                    }
+                }
+
+                update();
+            }
+        });
+
+        // Add this to your existing JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate bars when they come into view
+            const bars = document.querySelectorAll('.bar');
+            const circleProgress = document.querySelector('.circle-progress-path');
+            
+            const observerOptions = {
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('bar')) {
+                            const percentage = entry.target.getAttribute('data-percentage');
+                            entry.target.style.width = percentage + '%';
+                        } else if (entry.target.classList.contains('circle-progress-path')) {
+                            // Calculate circle progress (2 days out of 7 days = ~28.5%)
+                            const percentage = (2 / 7) * 100;
+                            const circumference = 339.292;
+                            const offset = circumference - (percentage / 100) * circumference;
+                            entry.target.style.strokeDashoffset = offset;
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            bars.forEach(bar => observer.observe(bar));
+            observer.observe(circleProgress);
+        });
+
+        // Add this to your existing JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress');
+            
+            const observerOptions = {
+                threshold: 0.5,
+                rootMargin: '0px'
+            };
+
+            const progressObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const value = entry.target.getAttribute('data-value');
+                        entry.target.style.width = `${value}%`;
+                        progressObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            progressBars.forEach(bar => {
+                progressObserver.observe(bar);
+            });
+        });
+
+        // Chat functionality
+        const chatResponses = {
+            "what loans do you offer?": 
+                "We offer several types of loans:\n" +
+                "• Home Loans (6.5% p.a.)\n" +
+                "• Car Loans (7.5% p.a.)\n" +
+                "• Education Loans (8% p.a.)\n" +
+                "• Business Loans (up to ₹50 Lakhs)",
+            
+            "how to apply for a loan?":
+                "Applying for a loan is easy:\n" +
+                "1. Create an account\n" +
+                "2. Fill in your details\n" +
+                "3. Upload required documents\n" +
+                "4. Get instant approval\n" +
+                "5. Complete digital verification",
+            
+            "what documents are required?":
+                "Required documents include:\n" +
+                "• ID Proof (Aadhar/PAN)\n" +
+                "• Address Proof\n" +
+                "• Income Proof\n" +
+                "• Bank Statements (3 months)\n" +
+                "• Photographs",
+            
+            "what are the interest rates?":
+                "Our competitive interest rates:\n" +
+                "• Home Loan: 6.5% - 8.5% p.a.\n" +
+                "• Car Loan: 7.5% - 9.5% p.a.\n" +
+                "• Education Loan: 8% - 10% p.a.\n" +
+                "• Business Loan: 11% - 14% p.a.",
+            
+            "default": "I apologize, but I couldn't understand your question. Please try asking something else or choose from the quick questions above."
+        };
+
+        function toggleChat() {
+            const chatContainer = document.getElementById('chatContainer');
+            chatContainer.style.display = chatContainer.style.display === 'none' || chatContainer.style.display === '' ? 'flex' : 'none';
+        }
+
+        function handleQuickQuestion(question) {
+            addMessage(question, 'user-message');
+            setTimeout(() => {
+                const response = chatResponses[question.toLowerCase()] || chatResponses["default"];
+                addMessage(response, 'bot-message');
+            }, 500);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user-message');
+                input.value = '';
+                
+                setTimeout(() => {
+                    const response = chatResponses[message.toLowerCase()] || chatResponses["default"];
+                    addMessage(response, 'bot-message');
+                }, 500);
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessage(message, className) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = className;
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Show notification dot initially
+        document.querySelector('.notification-dot').style.display = 'block';
+
+        // Hide notification dot when chat is opened
+        document.querySelector('.chat-button').addEventListener('click', function() {
+            document.querySelector('.notification-dot').style.display = 'none';
+        });
+
+        // Add JWT decode function
+        function jwt_decode(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        }
+    </script>
+
+    <!-- Add this SVG gradient definition to the top of your body tag -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#00A3FF"/>
+                <stop offset="100%" style="stop-color:#0057FF"/>
+            </linearGradient>
+        </defs>
+    </svg>
+</body>
+</html>
